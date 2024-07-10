@@ -26,3 +26,96 @@ echo $(expr $n2 - $n1 )
 echo $(expr $n2 \* $n1 )
 echo $(expr $n2 / $n1 )
 echo $(expr $n2 % $n1 )
+
+
+Loop in shell script:
+------------------------
+3 types:
+while loop : works till the time condition is true
+------------
+while condition
+do
+commands
+done
+---------------------------------------------------------------------------------------------------------------
+write a while loop to write all numbers till 100
+write a while loop to pint all +ve numbers.
+Write a while loop to use weighing machine for 4 times in a row, and display "try after 20 mins" on 5th attempt.
+-----------------------------------------------------------------------------------------------------------------
+
+number++
+number=number+1
+
+until loop: works till the time condition is false
+-----------
+while condition
+do
+commands
+done
+
+
+for loop:
+----------
+for logic
+do
+ commands
+done
+
+#a=6
+#b=5
+#c=9
+#if [[ $a -gt $b && $c -lt $a ]]
+#then
+#       echo "condition is true"
+#else
+#       echo "condition is false"
+#fi
+
+
+#age=16
+#if [ $age -ge 18 ]; then
+#       echo "you are eligibe to vote"
+#else
+#       echo "you are not elible to vote"
+#fi
+#
+
+#echo "Enter the number of your choice"
+#read n
+
+#if (( $((n%2))==0 ))
+#then
+#       ls -la
+#else
+#       ls
+#fi
+
+##############while loop#############################
+#while :
+#do
+#       echo " This is infinite loop."
+#done
+
+#num=0
+#while [ $num -lt 2 ]
+#do
+#read -p "Please enter your name: " name
+#echo " This is my $num attempt to use vending machine"
+
+#if [ $num == 1 ] ; then
+#        echo "you have exhauted your maximum no. of attempts , please try after 1 hour"
+#fi
+
+
+#num=$(( num+1 ))
+
+#done
+#
+#################until loop#######################
+n=1
+until [ $n -gt 10 ]
+do
+        echo $n
+        (( n++ ))
+done
+
