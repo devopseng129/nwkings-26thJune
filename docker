@@ -1,0 +1,139 @@
+virtual machine: logical partion on your physical server
+you can create many virtual machine in 1 physical server.
+Docker is the containerization software, other than docker we have rkt,lxc, lxd, linux, openshift
+1. docker installation:
+> apt  install docker.io
+2. We need one image to create a container.
+3. Notes on dockerhub
+> registry where docker free images are present.
+> Organisation create private registries also , which is used to save their custom images.
+> AWS--> ECR(Elastic container repository)
+> Azure --> ACR (Azure container registry)
+> DTR --> Docker trusted registry
+4. Different types of images:
+> OS type image: ubuntu, rhel, centos, debian, fedora
+> application type image: sql, nginx, tomcat, apache
+5. Docker commands
+> docker images
+> docker pull hello-world
+> docker run hello-world
+> docker ps -a
+> Remove a container
+	-- Remove a container which is up and running
+	> docker stop <cont id/cont name>
+	> docker rm <cont id/cont name>
+	-- remove it forcefully
+	> docker rm <cont id/cont name> -f
+> docker run --name cont1 -it centos
+> docker start <cont id/cont name>
+> docker stop <cont id/cont name>
+> docker run --name cont-nginx -d nginx
+> docker exec -it <cont id/cont name> bash  ==> It is used to attch to container created in detached mode
+> docker attach <cont id/cont name> ==> It is used to attch to container created in foreground mode.
+> to come out of the container execute shortcut key : ctrl p+q
+> docker history <image name>
+> docker inspect <cont id/cont name>
+> docker volume create myvol
+> docker run -it --name docker-vol1 myvol:/opt centos
+5. Ways to start a container
+> foreground mode(-it)
+	-- This mode is used to start os type of image
+	-- In this case:
+	  a. Container will be created
+	  b. Container will be up and running
+	  c. you will be logged in into container
+	  d. user will be attached to container terminal
+	  e. To come out of the container created in foreground mode:
+		i. exit 		==> this will bring you out of container, but container status changes to exited.
+		ii. ctrl+p+q	==> this will bring you out of container,and container will be in UP state.
+> detached mode(-d)
+	-- This mode is used for application type of image. web appication
+	-- In this case:
+	  a. Container will be created
+	  b. Container will be up and running
+	  c. you will not be logged in into container
+	  d. user will not be attached to container terminal
+	
+> difference between docker pull and docker run
+	-- docker pull: This os used to pull the image from docker hub registry to your machine
+	-- docker run: This is the command which wil check if image is pulled . If image is pulled it will create container 
+	   and if not pulled than it will pull the image and create the container.
+	   
+6. Docker volumes:
+> This concept is used to preserve the data of the container on the host machine.
+> This concept is also used to copy the data from host machine to docker container and vice versa.
+> 2 methods to create docker volumes:
+	-- named volumes methods
+	 > docker run -it --name docker-vol1 myvol:/opt centos
+	-- bind mmount
+	> Any directory in host machine can be used to preseve data.
+	> and you can copy data on the container directory from any host directory.
+7. Docker networking/port forwarding
+> Done in 2 different ways
+	-- you choose a port on docker host machine(-p)
+	-- docker allocates a port in docker host machine(-P)
+	> docker run -d --name cont-ecomm1 -P -v /dockerdemo/ecomm:/usr/local/apache2/htdocs/ httpd
+8. dockerfile: It is a simple text file. Name of dockerfile will be "dockerfile" only. 
+			   This will contain all instructions needed to create a container.
+
+FROM: what will be the base image of your container. This base image will be further customized to create your own image.
+RUN: It is used to execute any command which can be used to install package,unistall packagem=, upgrade package, create directory
+	  create users, give permissions to users.
+ENV: define environment variables and its values also.
+WORKDIR: used to specify default directory where commands will be executed.
+COPY: copy files from docker host machine to container directory.
+ADD: like a copy command but more powerful than that. It is used to copy a zipped/tar/war file also and will unzip/untar it.
+CMD: Sets default parameters that can be overridden from the Docker Command Line Interface (CLI) when a container is running.
+ENTRYPOINT: Default parameters that cannot be overridden when Docker Containers run with CLI parameters
+EXPOSE: port number of container
+VOLUME: to preserve data of a directory.
+
+
+9.dockerfile githuburl:
+https://github.com/devopseng129/nodejsappDockerfile/blob/master/dockerfile
+
+10. usecase for dockerfile
+> write a dockerfile with ubuntu as base image and having nginx installed and services in up state.
+
+11. Container orchestration tool: A tool which will manage containers lifecycle.
+> We need a tool which is used to create many container from one single image.
+> we need a tool which can manage multiple machines and can distribute containers across all the machines.
+> we need a tool the can monitor desired count of containers --> High availability.
+> application upgrades--> we need a tool to perform version upgrade of your application.
+
+12. Importance of container orchestration:
+------------------------------------------
+we can use container orchestartion to perform lot of tasks:
+> provisioning and deployment of many containers across many vms.
+> scale up and remove containers to distrubte customer traffic evenly in all machines.
+> Movement of conatiners in between vms can be easily managed by container orchestration tool.
+> can monitor health of your containers.
+
+container orchtration tool solution:
+> Docker swarm
+> kubernetes
+> Openshift
+> Apache mesos
+> Container orchestartion platforms: GKE, EKS, AKS
+
+
+13. Docker swarm
+> swarm is already installed in your machine, we have to initialize it.
+14. Docker swarm architecture
+> Leader/manager 
+--Whichever server swarm is initialized that server becomes manager.
+--The task of a manager is to execute all the orchestartion activities/commands.
+--No swarm command will be excuted in any of worker machine.
+> Worker
+--we can have a many machine with worker status.
+--Worker taker workload and executes task.
+
+15. Docker swarm commands: docker should be installed in manager and worker.
+> manager
+hostnamectl set-hostname manager.example.com
+docker swarm init
+docker service update --image sonal04/samplepyapp:v2 mysvc1
+docker service update --rollback mysvc1
+> worker
+hostnamectl set-hostname agent.example.com
+
