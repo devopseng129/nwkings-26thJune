@@ -1,0 +1,68 @@
+Ansible installtion:
+----------------------
+1. create 2 amazon linux instances
+2. login to master instance.
+3. execute below commands in master instance:
+> sudo su -
+> hostnamectl set-hostname master.example.com
+> sudo su -
+> vi /etc/ssh/sshd_config
+  look for PasswordAuthentication , change value from no to yes
+> vi /etc/sudoers
+  look for root user, just below root uer: ec2-user  ALL:NOPASSWD  ALL
+> systemctl restart sshd
+> yum install ansible -y
+> vi /etc/ansible/hosts
+  add agent server ip address: [webservers] in next line x.x.x.x
+> passwd ec2-user
+  provide a password to ec2-user
+*****wait for agent server configuration: complete step 4 and 5 before executing below commands*****
+> su - ec2-user
+> ssh-keygen
+> ssh-copy-id ec2-user@x.x.x.x
+  when you get ec2-user@172.31.42.220's password: , provide password of agent server
+
+4. login to agent instance.
+5. execute below commands in agent instance:
+> sudo su -
+> hostnamectl set-hostname agent.example.com
+> sudo su -
+> vi /etc/ssh/sshd_config
+  look for PasswordAuthentication , change value from no to yes
+> vi /etc/sudoers
+  look for root user, just below root uer: ec2-user  ALL:NOPASSWD  ALL
+> systemctl restart sshd
+> passwd ec2-user
+  provide a password to ec2-user
+  
+6. Confirm if ansible setup is done:
+> ansible -m ping webservers
+7. path where python script for ansible module is present:
+> /usr/lib/python3.9/site-packages/ansible/modules
+8. Ansible commands:
+> ansible -m setup webservers -a "filter=ansible_fqdn"
+> ansible -m ping webservers
+> ansible -m apt -a "name=nginx state=present" webservers --become
+
+yaml(yaml aint a markup language)/yml
+---
+- hosts: webservers
+  become: true
+  become_user: root
+  tasks:
+  - name: Install apache2
+    apt: name=apache2 state=present
+  - name: start apache2
+    service: name=apache2 state=started
+    
+	
+Deployment:
+-------------
+1. Copy files from one server to one or many
+2. Copy files from a web url to one or many servers
+3. Copy files from sourcecode managment to one or many servers
+
+
+usecase1:
+----------
+Create ansible playbook to deploy one application package to webserver hosted on servers in dev environment.
