@@ -1,0 +1,17 @@
+variables:
+  ACR: 'YOURACR.azurecr.io'
+
+steps:
+- task: Kubernetes@1
+  displayName: 'Update image in AKS'
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscriptionEndpoint: 'Pay-As-You-Go (4b652faa-7b9c-42a8-ab03-a74ce1188278)'
+    azureResourceGroup: sample
+    kubernetesCluster: sample
+    command: set
+    arguments: 'image deployments/mhc-front mhc-front=$(ACR)/myhealth.web:$(Build.BuildId)'
+    azureContainerRegistry: '$(ACR)'
+    secretName: mysecretkey
+    versionSpec: 1.8.1
+    checkLatest: true
