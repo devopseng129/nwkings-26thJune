@@ -1,0 +1,19 @@
+variables:
+  SQLserver: 'YOURSQLSERVER.database.windows.net'
+  DatabaseName: 'mhcdb'
+  SQLuser: 'sqladmin'
+  SQLpassword: 'P2ssw0rd1234'
+
+steps:
+- task: SqlAzureDacpacDeployment@1
+  displayName: 'Execute Azure SQL : DacpacTask'
+  inputs:
+    azureSubscription: 'Pay-As-You-Go (4b652faa-7b9c-42a8-ab03-a74ce1188278)'
+    ServerName: '$(SQLserver)'
+    DatabaseName: '$(DatabaseName)'
+    SqlUsername: ' $(SQLuser)'
+    SqlPassword: '$(SQLpassword)'
+    DacpacFile: '$(System.DefaultWorkingDirectory)/**/*.dacpac'
+    IpDetectionMethod: IPAddressRange
+    StartIpAddress: 0.0.0.0
+    EndIpAddress: 255.255.255.255
